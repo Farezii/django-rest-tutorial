@@ -15,4 +15,6 @@ router.register(r'users', views.UserViewSet, basename='user')
 #API URLs are now automatically determined by the router
 urlpatterns = [
     path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
 ]
