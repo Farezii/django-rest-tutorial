@@ -33,6 +33,10 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'snippets',
     'rest_framework',
+    # if you had put custom user class:
+    # 'users',
+    'oauth2_provider',
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,9 +48,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    # AuthenticationMiddleware NOT NEEDED for Oauth2
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # AuthenticationMiddleware should appear BEFORE (above) OAuth2TokenMiddleware
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -106,6 +114,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'oauth2_provider.backends.OAuth2Backend',
+    # Uncomment following if you want to access the admin
+    # 'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -133,3 +147,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+# No custom use rmodel made
+# AUTH_USER_MODEL = 'users.User'
+
+LOGIN_URL = '/admin/login/'
+
+# Do NOT allow this for production, unsafe
+CORS_ORIGIN_ALLOW_ALL = True
